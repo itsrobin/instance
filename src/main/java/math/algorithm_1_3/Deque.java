@@ -175,6 +175,11 @@ public class Deque<Item> implements Iterable<Item>{
             nextIndex++;
             return lastReturned.item;
         }
+
+        @Override
+        public void remove() {
+
+        }
     }
 
 
