@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<books name="123" xmlns:mvc="http://www.springframework.org/schema/mvc">
+    <book id="12">
+        <!--comment-->
+        <name category="java">thinking in java</name>
+        <price>85.5</price>
+    </book>
+    <book id="15">
+        <name category="spring">Spring in Action</name>
+        <price>39.0</price>
+    </book>
+</books>

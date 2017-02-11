@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<books xmlns:bks="http://www.books.org/books"
+           xmlns:="http://www.books.org/books2">
+    <bks:book>
+        <bks:title>java</bks:title>
+        <bks:author xmlns="http://www.books.org/people">
+            <name>j2ee</name>
+            <title>teacher</title>
+        </bks:author>
+    </bks:book>
+</books>
