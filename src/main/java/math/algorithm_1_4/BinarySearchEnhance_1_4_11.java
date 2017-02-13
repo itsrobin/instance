@@ -5,7 +5,7 @@ package math.algorithm_1_4;
  * @createTime 2017/2/10.
  * @updateTime 2017/2/10
  */
-public class BinarySearchEnhance {
+public class BinarySearchEnhance_1_4_11 {
 
    static int searchFirstPos(int A[], int n, int target)
     {
