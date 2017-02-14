@@ -1,11 +1,12 @@
 package util;
 
 import okhttp3.*;
+import okhttp3.internal.Util;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author lifeng
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @updateTime 2017/2/13
  */
 public class OkHttpUtil {
-    private final static OkHttpClient okHttpClient = getOkHttpClient();
+    private final  OkHttpClient okHttpClient = getOkHttpClient();
 
     private final static OkHttpUtil okHttpUtil = new OkHttpUtil();
 
@@ -69,7 +70,7 @@ public class OkHttpUtil {
 
     }
 
-    public void postAsynHttpForm(String url, Map<String, String> map, Map<String, String> headers) {
+    public void postAsynHttpForm(String url, Map<String, String> map, Map<String, String> headers) throws IOException {
 
         FormBody.Builder formBodyBuilder = new FormBody.Builder();
         Request.Builder requestBuilder = new Request.Builder();
@@ -94,21 +95,24 @@ public class OkHttpUtil {
                 .build();
 
         Call call = okHttpClient.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                String str = response.body().string();
+//
+//                System.out.println(str);
+//                System.out.println("调用时间:"+(System.currentTimeMillis()-b));
+//            }
+//
+//        });
 
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String str = response.body().string();
-
-                System.out.println(str);
-                System.out.println(System.currentTimeMillis()-b);
-            }
-
-        });
+        Response response =  call.execute();
+        System.out.println(response.body().string()+" 调用时间:"+(System.currentTimeMillis()-b));
 
     }
 
@@ -123,11 +127,5 @@ public class OkHttpUtil {
         return builder.build();
     }
 
-    public static void main(String[] args) throws IOException {
-//        System.out.println(OkHttpUtil.getInstance().doGet("http://www.jianshu.com/p/1873287eed87"));
-        System.out.println("Main thread ends!");
-
-
-    }
 
 }
