@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class TestModel {
 
-    public static ThreadPoolExecutor executor = new ThreadPoolExecutor(100 /* corePoolSize */,
-            100 /* maximumPoolSize */, 10L /* keepAliveTime */, TimeUnit.SECONDS,
-            new ArrayBlockingQueue(50), new ThreadPoolExecutor.CallerRunsPolicy());
+    public static ThreadPoolExecutor executor = new ThreadPoolExecutor(200 /* corePoolSize */,
+            200 /* maximumPoolSize */, 10L /* keepAliveTime */, TimeUnit.SECONDS,
+            new ArrayBlockingQueue(100), new ThreadPoolExecutor.CallerRunsPolicy());
 
     private static volatile boolean shutdown = false;
 
