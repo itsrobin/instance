@@ -95,35 +95,61 @@ public class OkHttpUtil {
                 .build();
 
         Call call = okHttpClient.newCall(request);
-//        call.enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                String str = response.body().string();
-//
-//                System.out.println(str);
-//                System.out.println("调用时间:"+(System.currentTimeMillis()-b));
-//            }
-//
-//        });
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
 
-        Response response =  call.execute();
-        System.out.println(response.body().string()+" 调用时间:"+(System.currentTimeMillis()-b));
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String str = response.body().string();
+
+                System.out.println(str);
+                System.out.println("调用时间:"+(System.currentTimeMillis()-b));
+            }
+
+        });
+
 
     }
 
+
+    public void doPost(String url, Map<String, String> map, Map<String, String> headers) throws IOException {
+
+        FormBody.Builder formBodyBuilder = new FormBody.Builder();
+        Request.Builder requestBuilder = new Request.Builder();
+
+        if (map != null) {
+            for (String s : map.keySet()) {
+                formBodyBuilder = formBodyBuilder.add(s, map.get(s));
+            }
+        }
+
+        if (headers != null) {
+            for (String s : headers.keySet()) {
+                requestBuilder = requestBuilder.addHeader(s, headers.get(s));
+            }
+        }
+
+        final long b = System.currentTimeMillis();
+        RequestBody formBody = formBodyBuilder.build();
+        Request request = requestBuilder
+                .url(url)
+                .post(formBody)
+                .build();
+
+        Call call = okHttpClient.newCall(request);
+
+        Response response = call.execute();
+        System.out.println(response.body().string() + " 调用时间:" + (System.currentTimeMillis() - b));
+
+    }
     private static OkHttpClient getOkHttpClient() {
-        File sdcache = new File("/Users/lifeng/Desktop ");
-        int cacheSize = 10 * 1024 * 1024;
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
+                .readTimeout(5, TimeUnit.SECONDS);
         return builder.build();
     }
 

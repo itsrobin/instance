@@ -8,7 +8,6 @@ import util.OkHttpUtil;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,6 +45,7 @@ public class TestModel {
         queryParam.put("password", "MTIzNDU2");
 
         final AtomicInteger atomic = new AtomicInteger(0);
+        final AtomicInteger errorCount = new AtomicInteger(0);
 
         long start = System.currentTimeMillis();
         long end;
@@ -56,17 +56,18 @@ public class TestModel {
                 @Override
                 public void run() {
                     try {
-                        OkHttpUtil.getInstance().postAsynHttpForm("http://dolphin.mycreditpal.com:8888/ecreditpal/rest/model/CCNB", queryParam, null);
+                        OkHttpUtil.getInstance().doPost("http://panda.mycreditpal.com:8888/ecreditpal/rest/model/CCNB", queryParam, null);
                         System.out.println(atomic.incrementAndGet());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        errorCount.incrementAndGet();
                     }
                 }
             });
 
-            if (atomic.intValue() > 2000) {
+            if (atomic.intValue() > 1000) {
                 end = System.currentTimeMillis();
                 System.out.println("费时" + (end - start));
+                System.out.println("出错线程数" + errorCount);
                 break;
             }
         }
@@ -78,14 +79,6 @@ public class TestModel {
 
 }
 
-//        for (int n = 0; n < 50000; n++) {
-//            executor.execute(new Runnable() {
-//                @Override
-//                public void run() {
-//                     OkHttpUtil.getInstance().postAsynHttpForm("http://dolphin.mycreditpal.com:8888/ecreditpal/rest/model/CCNB",queryParam,null);
-//                }
-//            });
-//        }
 
 
 
