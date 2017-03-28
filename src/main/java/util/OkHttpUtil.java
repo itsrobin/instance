@@ -1,9 +1,8 @@
 package util;
 
 import okhttp3.*;
-import okhttp3.internal.Util;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -32,13 +31,51 @@ public class OkHttpUtil {
     }
 
     /**
-     * 同步执行url操作
+     * 同步执行get请求
      * @param url 请求地址
      * @return
      */
     public String doGet(String url) throws IOException {
         Call call = processGetParam(url);
         Response response = call.execute();
+        return response.body().string();
+    }
+
+    /**
+     * 同步执行post请求
+     * @param url 请求地址
+     * @param map 参数,目前只支持form形式.
+     * @param headers 请求头
+     * @throws IOException
+     */
+    public String doPost(String url, Map<String, String> map, Map<String, String> headers) throws IOException {
+
+        FormBody.Builder formBodyBuilder = new FormBody.Builder();
+        Request.Builder requestBuilder = new Request.Builder();
+
+        if (map != null) {
+            for (String s : map.keySet()) {
+                formBodyBuilder = formBodyBuilder.add(s, map.get(s));
+            }
+        }
+
+        if (headers != null) {
+            for (String s : headers.keySet()) {
+                requestBuilder = requestBuilder.addHeader(s, headers.get(s));
+            }
+        }
+
+        final long b = System.currentTimeMillis();
+        RequestBody formBody = formBodyBuilder.build();
+        Request request = requestBuilder
+                .url(url)
+                .post(formBody)
+                .build();
+
+        Call call = okHttpClient.newCall(request);
+
+        Response response = call.execute();
+//        System.out.println(response.body().string() + " 调用时间:" + (System.currentTimeMillis() - b));
         return response.body().string();
     }
 
@@ -115,36 +152,7 @@ public class OkHttpUtil {
     }
 
 
-    public void doPost(String url, Map<String, String> map, Map<String, String> headers) throws IOException {
 
-        FormBody.Builder formBodyBuilder = new FormBody.Builder();
-        Request.Builder requestBuilder = new Request.Builder();
-
-        if (map != null) {
-            for (String s : map.keySet()) {
-                formBodyBuilder = formBodyBuilder.add(s, map.get(s));
-            }
-        }
-
-        if (headers != null) {
-            for (String s : headers.keySet()) {
-                requestBuilder = requestBuilder.addHeader(s, headers.get(s));
-            }
-        }
-
-        final long b = System.currentTimeMillis();
-        RequestBody formBody = formBodyBuilder.build();
-        Request request = requestBuilder
-                .url(url)
-                .post(formBody)
-                .build();
-
-        Call call = okHttpClient.newCall(request);
-
-        Response response = call.execute();
-        System.out.println(response.body().string() + " 调用时间:" + (System.currentTimeMillis() - b));
-
-    }
     private static OkHttpClient getOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
